@@ -22,7 +22,7 @@ int gerar_processos(Processo processos[], int n)
         processos[i].finalizado = 0;
     }
 
-    strcpy(processos[rand() % n].estado, "Em execucao");
+    // inicializa todos em "Pronto" e o algoritmo que decide quem vai executar
 
     return n;
 }
