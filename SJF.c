@@ -1,4 +1,5 @@
 #include "processo.h"
+#include <string.h>
 
 void simular_SJF(Processo processos[], Processo escalonados_em_ordem[], int n)
 {

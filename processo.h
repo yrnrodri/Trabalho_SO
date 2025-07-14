@@ -1,4 +1,3 @@
-#include <string.h>
 #ifndef PROCESSO_H
 #define PROCESSO_H
 
