@@ -17,7 +17,6 @@ int main() {
         originais[i].prioridade = 1 + (i%3);
     }
 
-    // -- OU --
     // n = gerar_processos(originais, 5);
 
     imprimir_processos_iniciais(originais, n);
@@ -30,23 +29,24 @@ int main() {
     params.quantum = 0;
     params.tickets = NULL;
     params.seed = 0;
-    simular_escalonamento(copia, n, FIFO, params);
+    simular_escalonamento(copia, n, FIFO, params, "results/fifo.json");
+
 
     // SJF
     memcpy(copia, originais, sizeof(Processo)*n);
-    simular_escalonamento(copia, n, SJF, params);
+    simular_escalonamento(copia, n, SJF, params, "results/sjf.json");
 
     // PRIORIDADE
     memcpy(copia, originais, sizeof(Processo)*n);
     params.quantum = 2;
-    simular_escalonamento(copia, n, PRIORIDADE, params);
+    simular_escalonamento(copia, n, PRIORIDADE, params, "results/prioridade.json");
 
     // LOTTERY
     memcpy(copia, originais, sizeof(Processo)*n);
     int tickets[MAX] = {1, 2, 3, 1, 2};
     params.tickets = tickets;
     params.seed = (unsigned) time(NULL);
-    simular_escalonamento(copia, n, LOTTERY, params);
+    simular_escalonamento(copia, n, LOTTERY, params, "results/lottery.json");
 
     return 0;
 }

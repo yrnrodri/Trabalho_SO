@@ -1,11 +1,16 @@
 #include "escalonador.h"
 #include <stdio.h>
+#include "exporta_json.h"
 #include <stdlib.h>
 #include <string.h>
 
-void simular_escalonamento(Processo processos[], int n, TipoAlgoritmo algoritmo, ParamsAlgoritmo params) {
+void simular_escalonamento(Processo processos[], int n, TipoAlgoritmo algoritmo, ParamsAlgoritmo params, const char* nome_arquivo) {
     int tempo = 0, finalizados = 0;
     int fila_prontos[MAX], n_prontos;
+
+    // para construir GUI 
+    int timeline[MAX_TEMPO]; 
+    int t_tick = 0;
 
     const char* estado_str[] = {"Pronto", "Executando", "Finalizado"};
 
@@ -59,6 +64,8 @@ void simular_escalonamento(Processo processos[], int n, TipoAlgoritmo algoritmo,
             tempo++;
             printf("Tempo %2d: Processo %d em execução (restante %d, estado: %s)\n", 
                    tempo, p->pid, p->tempo_restante, estado_str[p->estado]);
+            // Salva o PID executando nesse tick
+            timeline[t_tick++] = p->pid; 
             if (p->tempo_restante == 0) break;
         }
 
@@ -71,22 +78,6 @@ void simular_escalonamento(Processo processos[], int n, TipoAlgoritmo algoritmo,
         }
     }
 
-    if (algoritmo == LOTTERY) {
-        printf("PID | Espera | Turnaround | Estado final | Tickets\n");
-        for (int i = 0; i < n; i++) {
-            int turnaround = processos[i].tempo_espera + processos[i].tempo_execucao;
-            printf(" %2d |   %2d   |     %2d    | %s |   %d\n", 
-                processos[i].pid, processos[i].tempo_espera, turnaround, 
-                estado_str[processos[i].estado], params.tickets[i]);
-        }
-    } else {
-        printf("PID | Espera | Turnaround | Estado final\n");
-        for (int i = 0; i < n; i++) {
-            int turnaround = processos[i].tempo_espera + processos[i].tempo_execucao;
-            printf(" %2d |   %2d   |     %2d    | %s\n", 
-                processos[i].pid, processos[i].tempo_espera, turnaround, 
-                estado_str[processos[i].estado]);
-        }
-    }
-
+    // salvando json
+    salvar_json(processos, n, algoritmo, params, nome_arquivo, timeline, t_tick);
 }
