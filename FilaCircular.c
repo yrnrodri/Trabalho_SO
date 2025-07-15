@@ -67,7 +67,7 @@ int primeiro(FilaCircular *fila)
 void imprimirFila(FilaCircular *fila) {
     printf("Fila: ");
     for (int i = fila->inicio; i < fila->fim; i++) {
-        printf("%d ", fila->dados[i % fila->capacidade]);
+        printf("%d ", fila->dados[i % fila->capacidade] + 1);
     }
     printf("\n");
 }

@@ -18,7 +18,7 @@ void simular_RR(Processo processos[], int n, int quantum)
 
     while (finalizados < n)
     {
-        //printf("Tempo = %d\n", tempo);
+        printf("Tempo = %d\n", tempo);
         // coloca os processos que chegaram agora na fila
         for (int i = 0; i < n; i++)
         {
@@ -34,6 +34,7 @@ void simular_RR(Processo processos[], int n, int quantum)
         if (processo_em_exec == -1 && !filaVazia(fila))
         {
             processo_em_exec = primeiro(fila);
+            desenfileirar(fila);                // removo da fila
             tempo_executado = 0;
             strcpy(processos[processo_em_exec].estado, "Em execucao");
         }
@@ -41,7 +42,8 @@ void simular_RR(Processo processos[], int n, int quantum)
         // atualiza os tempos de espera dos outros processos prontos
         for (int i = 0; i < n; i++)
         {
-            if (i != processo_em_exec && processos[i].tempo_chegada <= tempo && processos[i].finalizado == 0)
+            if (i != processo_em_exec && processos[i].tempo_chegada <= tempo 
+                && processos[i].finalizado == 0)
             {
                 processos[i].tempo_espera++;
             }
@@ -53,15 +55,15 @@ void simular_RR(Processo processos[], int n, int quantum)
             processos[processo_em_exec].tempo_restante--;
             tempo_executado++;
 
-            //printf("Processo com ID = %d executado; Tempo restante do processo = %d\n",
-            //     processo_em_exec + 1, processos[processo_em_exec].tempo_restante);
+            printf("Processo com ID = %d executado; Tempo restante do processo = %d\n",
+                 processo_em_exec + 1, processos[processo_em_exec].tempo_restante);
 
             // se terminou
             if (processos[processo_em_exec].tempo_restante == 0)
             {
                 processos[processo_em_exec].finalizado = 1;
                 strcpy(processos[processo_em_exec].estado, "Finalizado");
-                desenfileirar(fila);
+                //desenfileirar(fila);
                 finalizados++;
                 processo_em_exec = -1;
             }
@@ -69,9 +71,8 @@ void simular_RR(Processo processos[], int n, int quantum)
             else if (tempo_executado == quantum)
             {
                 strcpy(processos[processo_em_exec].estado, "Pronto");
-                desenfileirar(fila);                // removo da fila
                 enfileirar(fila, processo_em_exec); // insiro mais uma vez, assim ele volta pro fim da fila
-                //printf("Fila depois de terminar um quantum: \n");
+                printf("Fila depois de terminar um quantum: \n");
                 imprimirFila(fila);
                 processo_em_exec = -1;
             }
