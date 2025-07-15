@@ -20,7 +20,7 @@ int main() {
     // -- OU --
     // n = gerar_processos(originais, 5);
 
-    imprimir_processos(originais,NULL, NULL, n);
+    imprimir_processos_iniciais(originais, n);
 
     ParamsAlgoritmo params;
     Processo copia[MAX];

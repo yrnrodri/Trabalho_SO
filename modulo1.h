@@ -5,6 +5,6 @@
 #include "processo.h"
 
 int gerar_processos(Processo processos[], int n);
-void imprimir_processos(Processo processos[], TipoAlgoritmo algoritmo, ParamsAlgoritmo params, int n);
+void imprimir_processos_iniciais(Processo processos[], int n);
 
 #endif
