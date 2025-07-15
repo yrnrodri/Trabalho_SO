@@ -1,11 +1,11 @@
 {
   "algoritmo": "Prioridade",
   "processos": [
-    {"pid": 1, "chegada": 0, "execucao": 2, "prioridade": 1, "espera": 0, "turnaround": 2, "estado": "Finalizado"},
-    {"pid": 2, "chegada": 2, "execucao": 3, "prioridade": 2, "espera": 4, "turnaround": 7, "estado": "Finalizado"},
-    {"pid": 3, "chegada": 4, "execucao": 4, "prioridade": 3, "espera": 0, "turnaround": 4, "estado": "Finalizado"},
-    {"pid": 4, "chegada": 6, "execucao": 5, "prioridade": 1, "espera": 9, "turnaround": 14, "estado": "Finalizado"},
-    {"pid": 5, "chegada": 8, "execucao": 6, "prioridade": 2, "espera": 1, "turnaround": 7, "estado": "Finalizado"}
+    {"pid": 1, "chegada": 5, "execucao": 7, "prioridade": 3, "espera": 7, "turnaround": 14, "estado": "Finalizado"},
+    {"pid": 2, "chegada": 6, "execucao": 5, "prioridade": 2, "espera": 12, "turnaround": 17, "estado": "Finalizado"},
+    {"pid": 3, "chegada": 3, "execucao": 9, "prioridade": 4, "espera": 0, "turnaround": 9, "estado": "Finalizado"},
+    {"pid": 4, "chegada": 3, "execucao": 4, "prioridade": 1, "espera": 25, "turnaround": 29, "estado": "Finalizado"},
+    {"pid": 5, "chegada": 1, "execucao": 6, "prioridade": 2, "espera": 21, "turnaround": 27, "estado": "Finalizado"}
   ],
-  "timeline": [1, 1, 2, 2, 3, 3, 3, 3, 2, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4]
+  "timeline": [5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 5, 5, 5, 5, 4, 4, 4, 4]
 }

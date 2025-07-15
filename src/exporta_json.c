@@ -1,6 +1,20 @@
 #include "exporta_json.h"
 #include <stdio.h>
 
+
+void salvar_json_processos_iniciais(Processo processos[], int n, const char* nome_arquivo) {
+    FILE *f = fopen(nome_arquivo, "w");
+    if (!f) return;
+    fprintf(f, "{\n  \"processos\": [\n");
+    for (int i = 0; i < n; i++)
+        fprintf(f, "    {\"pid\": %d, \"chegada\": %d, \"execucao\": %d, \"prioridade\": %d}%s\n",
+                processos[i].pid, processos[i].tempo_chegada, processos[i].tempo_execucao,
+                processos[i].prioridade, i < n-1 ? "," : "");
+    fprintf(f, "  ]\n}\n");
+    fclose(f);
+}
+
+
 void salvar_json(Processo processos[], int n, TipoAlgoritmo algoritmo, ParamsAlgoritmo params, const char *nome_arquivo, int timeline[], int timeline_len)
 {
     const char *estado_str[] = {"Pronto", "Executando", "Finalizado"};

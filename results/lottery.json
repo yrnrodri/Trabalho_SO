@@ -2,11 +2,11 @@
   "algoritmo": "Lottery",
   "tickets": [1, 2, 3, 1, 2],
   "processos": [
-    {"pid": 1, "chegada": 0, "execucao": 2, "prioridade": 1, "espera": 0, "turnaround": 2, "estado": "Finalizado"},
-    {"pid": 2, "chegada": 2, "execucao": 3, "prioridade": 2, "espera": 1, "turnaround": 4, "estado": "Finalizado"},
-    {"pid": 3, "chegada": 4, "execucao": 4, "prioridade": 3, "espera": 1, "turnaround": 5, "estado": "Finalizado"},
-    {"pid": 4, "chegada": 6, "execucao": 5, "prioridade": 1, "espera": 9, "turnaround": 14, "estado": "Finalizado"},
-    {"pid": 5, "chegada": 8, "execucao": 6, "prioridade": 2, "espera": 5, "turnaround": 11, "estado": "Finalizado"}
+    {"pid": 1, "chegada": 5, "execucao": 7, "prioridade": 3, "espera": 20, "turnaround": 27, "estado": "Finalizado"},
+    {"pid": 2, "chegada": 6, "execucao": 5, "prioridade": 2, "espera": 13, "turnaround": 18, "estado": "Finalizado"},
+    {"pid": 3, "chegada": 3, "execucao": 9, "prioridade": 4, "espera": 7, "turnaround": 16, "estado": "Finalizado"},
+    {"pid": 4, "chegada": 3, "execucao": 4, "prioridade": 1, "espera": 22, "turnaround": 26, "estado": "Finalizado"},
+    {"pid": 5, "chegada": 1, "execucao": 6, "prioridade": 2, "espera": 2, "turnaround": 8, "estado": "Finalizado"}
   ],
-  "timeline": [1, 1, 2, 2, 3, 2, 3, 3, 3, 4, 4, 4, 5, 4, 5, 5, 5, 5, 5, 4]
+  "timeline": [5, 5, 3, 5, 5, 3, 5, 5, 3, 3, 4, 2, 2, 3, 3, 3, 3, 3, 2, 1, 1, 2, 2, 4, 4, 1, 1, 4, 1, 1, 1]
 }

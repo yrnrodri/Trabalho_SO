@@ -17,13 +17,6 @@ void simular_escalonamento(Processo processos[], int n, TipoAlgoritmo algoritmo,
     if (algoritmo == LOTTERY)
         srand(params.seed);
 
-    // Inicializa processos
-    for (int i = 0; i < n; i++) {
-        processos[i].tempo_restante = processos[i].tempo_execucao;
-        processos[i].tempo_espera = 0;
-        processos[i].estado = PRONTO;
-    }
-
     printf("\n=== Simulação %s ===\n", 
         algoritmo==FIFO?"FIFO":
         algoritmo==SJF?"SJF":
