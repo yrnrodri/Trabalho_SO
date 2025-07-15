@@ -1,25 +1,52 @@
 #include <stdio.h>
-#include "processo.h"
-#include "modulo1.c"
-#include "SJF.c"
-#include "RR.c"
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include "escalonador.h"
+#include "modulo1.h"
 
-// Declaração das funções do módulo 1
-int gerar_processos(Processo[], int);
-void imprimir_processos(Processo[], int);
-void simular_SJF(Processo[], Processo[], int n);
-void simular_RR(Processo processos[], int n, int quantum);
+int main() {
+    Processo originais[MAX];
+    int n = 5;
 
-int main()
-{
-    Processo lista[20];
+    // Exemplo: preencher manualmente
+    for (int i = 0; i < n; i++) {
+        originais[i].pid = i+1;
+        originais[i].tempo_chegada = i*2;
+        originais[i].tempo_execucao = 2+i;
+        originais[i].prioridade = 1 + (i%3);
+    }
 
-    int total = gerar_processos(lista, 5);
-    imprimir_processos(lista, total);
+    // -- OU --
+    // n = gerar_processos(originais, 5);
 
-    //simular_RR(lista, total, 2);
+    imprimir_processos(originais,NULL, NULL, n);
 
+    ParamsAlgoritmo params;
+    Processo copia[MAX];
 
+    // FIFO
+    memcpy(copia, originais, sizeof(Processo)*n);
+    params.quantum = 0;
+    params.tickets = NULL;
+    params.seed = 0;
+    simular_escalonamento(copia, n, FIFO, params);
+
+    // SJF
+    memcpy(copia, originais, sizeof(Processo)*n);
+    simular_escalonamento(copia, n, SJF, params);
+
+    // PRIORIDADE
+    memcpy(copia, originais, sizeof(Processo)*n);
+    params.quantum = 2;
+    simular_escalonamento(copia, n, PRIORIDADE, params);
+
+    // LOTTERY
+    memcpy(copia, originais, sizeof(Processo)*n);
+    int tickets[MAX] = {1, 2, 3, 1, 2};
+    params.tickets = tickets;
+    params.seed = (unsigned) time(NULL);
+    simular_escalonamento(copia, n, LOTTERY, params);
 
     return 0;
 }
