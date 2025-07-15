@@ -1,5 +1,3 @@
----
-
 # Simulador de Escalonamento de Processos
 
 Projeto acadêmico de Sistemas Operacionais I  
