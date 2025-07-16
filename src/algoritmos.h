@@ -1,18 +1,29 @@
 #ifndef ALGORITMOS_H
 #define ALGORITMOS_H
 
-#include "processo.h"     // struct Processo
+#include "processo.h" // struct Processo
+#include "FilaCircular.h"
 
-typedef enum { FIFO, SJF, PRIORIDADE, LOTTERY } TipoAlgoritmo;
+typedef enum
+{
+    FIFO,
+    SJF,
+    PRIORIDADE,
+    LOTTERY,
+    RR,
+    SRTN
+} TipoAlgoritmo;
 
-typedef struct {
+typedef struct
+{
     int quantum;
     int *tickets;
     unsigned seed;
 } ParamsAlgoritmo;
 
 // retorno do algoritmo
-typedef struct {
+typedef struct
+{
     int idx_processo; // índice do processo escolhido
     int duracao;      // por quanto tempo vai executar
 } ExecucaoAlgoritmo;
@@ -20,6 +31,6 @@ typedef struct {
 // algoritmo de escalonamento
 ExecucaoAlgoritmo algoritmo_escalonamento(
     Processo processos[], int n, int *fila, int n_prontos,
-    TipoAlgoritmo algoritmo, ParamsAlgoritmo params, int tempo_executado);
+    TipoAlgoritmo algoritmo, ParamsAlgoritmo params, int tempo_executado, FilaCircular *filaa);
 
 #endif

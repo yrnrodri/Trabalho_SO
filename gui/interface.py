@@ -187,7 +187,7 @@ else:
 # --------------------------------------------------------------------------------------
 algos = st.sidebar.multiselect(
     "Selecione um ou mais algoritmos:",
-    options=["FIFO", "SJF", "PRIORIDADE", "LOTTERY"],
+    options=["FIFO", "SJF", "PRIORIDADE", "LOTTERY", "RR", "SRTN"],
 )
 
 # Paleta cores por PID (para Gantt)
