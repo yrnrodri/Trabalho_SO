@@ -1,9 +1,0 @@
-{
-  "processos": [
-    {"pid": 1, "chegada": 1, "execucao": 9, "prioridade": 4},
-    {"pid": 2, "chegada": 4, "execucao": 5, "prioridade": 4},
-    {"pid": 3, "chegada": 6, "execucao": 1, "prioridade": 3},
-    {"pid": 4, "chegada": 9, "execucao": 2, "prioridade": 2},
-    {"pid": 5, "chegada": 2, "execucao": 2, "prioridade": 4}
-  ]
-}

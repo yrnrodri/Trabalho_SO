@@ -203,7 +203,22 @@ ALGO_COLORS = {
     "SJF": "#ff7f0e",
     "PRIORIDADE": "#2ca02c",
     "LOTTERY": "#d62728",
+    "RR": "#9467bd",
+    "SRTN": "#8c564b",
 }
+
+
+# --------------------------------------------------------------------------------------
+# Função auxiliar: nome do arquivo de saída do algoritmo (interface <-> C)
+# --------------------------------------------------------------------------------------
+def resultado_path(algo: str) -> str:
+    """Retorna caminho do arquivo JSON gerado pelo C para um algoritmo."""
+    algo = algo.upper()
+    if algo in ("RR", "SRTN"):
+        fname = algo.lower() + ".json"   # rr.json, srtn.json
+    else:
+        fname = algo.lower() + ".json"   # fifo.json, sjf.json...
+    return os.path.join(RESULTS_DIR, fname)
 
 
 # --------------------------------------------------------------------------------------
@@ -213,7 +228,7 @@ comparativos = []  # <- vamos acumular turnaround aqui
 
 if st.session_state.processos_gerados and df_iniciais is not None and algos:
     for algo in algos:
-        res_path = os.path.join(RESULTS_DIR, f"{algo.lower()}.json")
+        res_path = resultado_path(algo)
 
         # Gerar se ainda não existir
         if not os.path.exists(res_path):
@@ -243,7 +258,6 @@ if st.session_state.processos_gerados and df_iniciais is not None and algos:
         df_res = pd.DataFrame(data["processos"])
 
         # Acumula comparativo (turnaround)
-        # garante colunas esperadas
         if {"pid", "turnaround"}.issubset(df_res.columns):
             for _, row in df_res.iterrows():
                 comparativos.append(
@@ -271,12 +285,18 @@ if st.session_state.processos_gerados and df_iniciais is not None and algos:
         segments.append({"pid": current, "start": start, "end": len(timeline)})
 
         gantt_df = pd.DataFrame(segments)
+
+        # Lista de todas as categorias (PID) a partir dos processos iniciais
+        todos_pids = [str(p) for p in sorted(df_iniciais["pid"].unique())]
+
+        # Para o Plotly tratar como categoria ordenada
         gantt_df["Processo"] = gantt_df["pid"].astype(str)
+
+        # Duração de cada segmento
         gantt_df["duration"] = gantt_df["end"] - gantt_df["start"]
 
-        # Ordenação consistente no eixo Y (1..N) com base nos processos iniciais
-        todos_pids = df_iniciais["pid"].astype(str).tolist()
-        todos_pids.sort(key=int)
+        # Mapa de cores (chave string!)
+        color_map_local = {str(pid): COLOR_MAP.get(pid, "#888888") for pid in sorted(df_iniciais["pid"].unique())}
 
         fig = px.bar(
             gantt_df,
@@ -285,15 +305,26 @@ if st.session_state.processos_gerados and df_iniciais is not None and algos:
             base="start",
             orientation="h",
             color="Processo",
-            color_discrete_map={str(pid): COLOR_MAP.get(pid, "#888888") for pid in gantt_df["pid"].unique()},
+            color_discrete_map=color_map_local,
             title=f"Gantt: {algo}",
-            category_orders={"Processo": todos_pids},
         )
-        fig.update_yaxes(autorange="reversed", title="Processo")
-        fig.update_xaxes(title="Tempo (ticks)", range=[0, gantt_df["end"].max()])
+
+        # === Força todos os ticks no eixo Y ===
+        fig.update_yaxes(
+            title="Processo",
+            categoryorder="array",                   # usar ordem definida em categoryarray
+            categoryarray=list(reversed(todos_pids)),# inverte para ter PID 1 no topo
+            tickmode="array",                        # forçar os ticks
+            tickvals=todos_pids,                     # lista de categorias
+            ticktext=todos_pids                      # rótulos iguais
+        )
+
+        # Eixo X de 0 até o maior 'end'
+        max_end = gantt_df["end"].max()
+        fig.update_xaxes(title="Tempo (ticks)", range=[0, max_end])
+
         fig.update_layout(showlegend=False, height=320)
         st.plotly_chart(fig, use_container_width=True)
-
 
 # --------------------------------------------------------------------------------------
 # Comparação de TURNAROUND por PID (aparece no fim da página)
@@ -330,8 +361,10 @@ if comparativos:
         y="turnaround",
         color="algoritmo",
         barmode="group",
-        category_orders={"pid_str": sorted(comp_df["pid_str"].unique(), key=int),
-                         "algoritmo": algos},
+        category_orders={
+            "pid_str": sorted(comp_df["pid_str"].unique(), key=int),
+            "algoritmo": algos,
+        },
         color_discrete_map=ALGO_COLORS,
         title="Turnaround por PID (Comparativo)",
         labels={"pid_str": "PID", "turnaround": "Turnaround (ticks)", "algoritmo": "Algoritmo"},

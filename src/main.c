@@ -16,13 +16,13 @@
 #include "modulo1.h"
 #include "exporta_json.h"
 
-/* =======================================================================
-   Parser simples do JSON gerado pelo Python (indentado).
-   Não depende de linhas específicas: lê o arquivo inteiro e procura,
-   em sequência, pelos campos "pid", "chegada", "execucao" e "prioridade".
-   Ignora qualquer coisa extra no JSON.
-   Retorna número de processos lidos.
-   ======================================================================= */
+/* -----------------------------------------------------------------------
+   Parser simples do JSON gerado pela interface Python.
+   Lê o arquivo inteiro na memória e, de forma bem tolerante, procura
+   sequencialmente pelos campos "pid", "chegada", "execucao", "prioridade".
+   Qualquer outra informação no JSON é ignorada.
+   Retorna o número de processos lidos (0 em erro).
+   ----------------------------------------------------------------------- */
 int carregar_processos_do_json(const char *nome_arquivo,
                                Processo processos[],
                                int max)
@@ -32,6 +32,7 @@ int carregar_processos_do_json(const char *nome_arquivo,
         fprintf(stderr, "carregar_processos_do_json: não abriu %s\n", nome_arquivo);
         return 0;
     }
+
     fseek(f, 0, SEEK_END);
     long tamanho = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -39,6 +40,7 @@ int carregar_processos_do_json(const char *nome_arquivo,
         fclose(f);
         return 0;
     }
+
     char *buf = (char*)malloc((size_t)tamanho + 1);
     if (!buf) {
         fclose(f);
@@ -57,10 +59,11 @@ int carregar_processos_do_json(const char *nome_arquivo,
     while (n < max) {
         char *kpid = strstr(p, "\"pid\"");
         if (!kpid) break;
+
         char *kche = strstr(kpid, "\"chegada\"");
         char *kexe = strstr(kpid, "\"execucao\"");
         char *kpri = strstr(kpid, "\"prioridade\"");
-        if (!kche || !kexe || !kpri) break;  /* JSON malformado */
+        if (!kche || !kexe || !kpri) break;  /* JSON inesperado */
 
         int pid, chegada, execucao, prioridade;
 
@@ -79,7 +82,7 @@ int carregar_processos_do_json(const char *nome_arquivo,
         processos[n].finalizado     = 0;
         n++;
 
-        /* avança 'p' para depois do bloco atual para procurar o próximo */
+        /* procura próximo processo depois deste bloco */
         p = kpri + 1;
     }
 
@@ -87,10 +90,10 @@ int carregar_processos_do_json(const char *nome_arquivo,
     return n;
 }
 
-/* ======================================================================= */
+/* ----------------------------------------------------------------------- */
 int main(int argc, char *argv[])
 {
-    /* Garante existência da pasta results/ (relativa ao cwd) */
+    /* Garante existência da pasta results/ */
     MKDIR("results");
 
     Processo originais[MAX];
@@ -101,15 +104,17 @@ int main(int argc, char *argv[])
     if (argc > 1) modo      = argv[1];
     if (argc > 2) algoritmo = argv[2];
 
-    /* Se pediu --fixed ou --random: gera processos e salva; opcionalmente roda algoritmo */
+    /* --fixed / --random => gera processos; se nenhum algoritmo, encerra */
     if (modo && (strcmp(modo, "--fixed") == 0 || strcmp(modo, "--random") == 0)) {
         op = (strcmp(modo, "--random") == 0) ? 0 : 1;
         n = gerar_processos(originais, n, op, "results/dados_originais.json");
         printf("Processos %s gerados!\n", op == 0 ? "aleatórios" : "fixos");
         imprimir_processos_iniciais(originais, n);
-        if (!algoritmo) return 0;  /* só queria gerar */
+        if (!algoritmo) {
+            return 0;  /* geração apenas */
+        }
     }
-    /* Se pediu --load: carrega processos previamente salvos em JSON */
+    /* --load => usa dados já existentes */
     else if (modo && strcmp(modo, "--load") == 0) {
         n = carregar_processos_do_json("results/dados_originais.json", originais, MAX);
         if (n == 0) {
@@ -123,11 +128,11 @@ int main(int argc, char *argv[])
     }
 
     if (!algoritmo) {
-        fprintf(stderr, "Nenhum algoritmo especificado.\n");
+        /* Chamado sem algoritmo após --load? Nada a fazer. */
         return 0;
     }
 
-    /* Com processos carregados, roda algoritmo solicitado */
+    /* Executa algoritmo */
     ParamsAlgoritmo params;
     Processo copia[MAX];
 
@@ -150,17 +155,18 @@ int main(int argc, char *argv[])
         int tickets[MAX] = {1,2,3,1,2};
         params.tickets = tickets; params.seed = (unsigned)time(NULL);
         simular_escalonamento(copia, n, LOTTERY, params, "results/lottery.json");
-        
+
     } else if (strcmp(algoritmo, "RR") == 0) {
-        memcpy(copia, originais, sizeof(Processo)*n);
-        params.quantum = 2;
-        simular_escalonamento(copia, n, RR, params, "results/RR.json");
-        
+        memcpy(copia, originais, sizeof(Processo) * n);
+        params.quantum = 2; params.tickets = NULL; params.seed = 0;
+        simular_escalonamento(copia, n, RR, params, "results/rr.json");
+
     } else if (strcmp(algoritmo, "SRTN") == 0) {
-        memcpy(copia, originais, sizeof(Processo)*n);
-        simular_escalonamento(copia, n, SRTN, params, "results/SRTN.json");
-    }
-     else {
+        memcpy(copia, originais, sizeof(Processo) * n);
+        params.quantum = 0; params.tickets = NULL; params.seed = 0;
+        simular_escalonamento(copia, n, SRTN, params, "results/srtn.json");
+
+    } else {
         fprintf(stderr, "Algoritmo desconhecido: %s\n", algoritmo);
         return 1;
     }
