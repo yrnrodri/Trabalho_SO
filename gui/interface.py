@@ -70,7 +70,7 @@ else:
 # Seleção de algoritmos (após gerar os processos)
 algos = st.sidebar.multiselect(
     "Selecione um ou mais algoritmos:",
-    options=["FIFO", "SJF", "PRIORIDADE", "LOTTERY", "RR"],
+    options=["FIFO", "SJF", "PRIORIDADE", "LOTTERY", "RR", "SRTN"],
 )
 
 color_map = {

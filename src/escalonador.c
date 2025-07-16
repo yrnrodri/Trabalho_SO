@@ -160,8 +160,8 @@ void simular_escalonamento(Processo processos[], int n, TipoAlgoritmo algoritmo,
         }
     }
 
-    if (fila_circular != NULL)
-        liberarFila(fila_circular);
+    if (fila_circular != NULL) liberarFila(fila_circular);
+    
     // salvando json
     salvar_json(processos, n, algoritmo, params, nome_arquivo, timeline, t_tick);
 }

@@ -85,6 +85,10 @@ int main(int argc, char *argv[])
         memcpy(copia, originais, sizeof(Processo)*n);
         params.quantum = 2;
         simular_escalonamento(copia, n, RR, params, "results/RR.json");
+        
+    } else if (strcmp(algoritmo, "SRTN") == 0) {
+        memcpy(copia, originais, sizeof(Processo)*n);
+        simular_escalonamento(copia, n, SRTN, params, "results/SRTN.json");
     }
      else {
         fprintf(stderr, "Algoritmo desconhecido: %s\n", algoritmo);

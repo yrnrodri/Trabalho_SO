@@ -10,7 +10,8 @@ typedef enum
     SJF,
     PRIORIDADE,
     LOTTERY,
-    RR
+    RR,
+    SRTN
 } TipoAlgoritmo;
 
 typedef struct
