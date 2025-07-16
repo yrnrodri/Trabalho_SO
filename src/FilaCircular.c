@@ -1,14 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-
-typedef struct
-{
-    int *dados;     // Vetor alocado dinamicamente
-    int inicio;     // Índice absoluto do primeiro elemento
-    int fim;        // Índice absoluto do próximo elemento
-    int capacidade; // Capacidade da fila
-} FilaCircular;
+#include "FilaCircular.h"
 
 FilaCircular *criarFila(int capacidade)
 {
@@ -64,9 +56,16 @@ int primeiro(FilaCircular *fila)
     return fila->dados[fila->inicio % fila->capacidade];
 }
 
-void imprimirFila(FilaCircular *fila) {
+int tamanhoFila(FilaCircular *fila)
+{
+    return (fila->fim - fila->inicio);
+}
+
+void imprimirFila(FilaCircular *fila)
+{
     printf("Fila: ");
-    for (int i = fila->inicio; i < fila->fim; i++) {
+    for (int i = fila->inicio; i < fila->fim; i++)
+    {
         printf("%d ", fila->dados[i % fila->capacidade] + 1);
     }
     printf("\n");

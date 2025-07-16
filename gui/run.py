@@ -15,6 +15,7 @@ compile_cmd = [
     'src/algoritmos.c',
     'src/modulo1.c',
     'src/exporta_json.c',
+    'src/FilaCircular.c',
     '-o', 'build/simulador'
 ]
 

@@ -4,6 +4,7 @@
     "stdio.h": "c",
     "processo.h": "c",
     "exporta_json.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "algoritmos.h": "c"
   }
 }
