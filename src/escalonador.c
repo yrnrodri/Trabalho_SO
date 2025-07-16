@@ -7,6 +7,8 @@
 void simular_escalonamento(Processo processos[], int n, TipoAlgoritmo algoritmo, ParamsAlgoritmo params, const char* nome_arquivo) {
     int tempo = 0, finalizados = 0;
     int fila_prontos[MAX], n_prontos;
+    ExecucaoAlgoritmo exec = {-1,0};
+    Processo *p = NULL;
 
     // para construir GUI 
     int timeline[MAX_TEMPO]; 
@@ -33,41 +35,41 @@ void simular_escalonamento(Processo processos[], int n, TipoAlgoritmo algoritmo,
         }
         if (n_prontos == 0) { tempo++; continue; }
 
-        // Seleciona processo a ser executado
-        ExecucaoAlgoritmo exec = algoritmo_escalonamento(
+        if (exec.duracao == 0){
+            // Seleciona processo a ser executado
+            exec = algoritmo_escalonamento(
             processos, n, fila_prontos, n_prontos, algoritmo, params, 0);
 
-        // processo em execucao
-        Processo *p = &processos[exec.idx_processo];
+            // processo em execucao
+            p = &processos[exec.idx_processo];
 
-        // Atualiza estados
-        for (int i = 0; i < n; i++) {
-            if (processos[i].estado == EXECUTANDO)
-                processos[i].estado = PRONTO;
+            // Atualiza estados
+            for (int i = 0; i < n; i++) {
+                if (processos[i].estado == EXECUTANDO)
+                    processos[i].estado = PRONTO;
+            }
+            p->estado = EXECUTANDO;
         }
-        p->estado = EXECUTANDO;
 
-        // Executa pelo tempo definido pelo algoritmo
-        for (int t = 0; t < exec.duracao; t++) {
-            p->tempo_restante--;
-            // Atualiza espera dos outros prontos
-            for (int i = 0; i < n_prontos; i++)
-                if (fila_prontos[i] != exec.idx_processo && processos[fila_prontos[i]].estado != FINALIZADO)
-                    processos[fila_prontos[i]].tempo_espera++;
-            tempo++;
-            printf("Tempo %2d: Processo %d em execução (restante %d, estado: %s)\n", 
-                   tempo, p->pid, p->tempo_restante, estado_str[p->estado]);
-            // Salva o PID executando nesse tick
-            timeline[t_tick++] = p->pid; 
-            if (p->tempo_restante == 0) break;
-        }
+        // Executa 1 tick
+        p->tempo_restante--;
+        exec.duracao--;
+
+        // Atualiza espera dos outros prontos no tick atual
+        for (int i = 0; i < n_prontos; i++)
+            if (fila_prontos[i] != exec.idx_processo && processos[fila_prontos[i]].estado != FINALIZADO)
+                processos[fila_prontos[i]].tempo_espera++;
+        tempo++;
+        printf("Tempo %2d: Processo %d em execução (restante %d, estado: %s)\n", 
+                tempo, p->pid, p->tempo_restante, estado_str[p->estado]);
+        // Salva o PID executando nesse tick
+        timeline[t_tick++] = p->pid; 
 
         // Finalizou?
         if (p->tempo_restante == 0 && p->estado != FINALIZADO) {
             p->estado = FINALIZADO;
             finalizados++;
-        } else if (p->estado == EXECUTANDO) {
-            p->estado = PRONTO; // voltou para pronto se foi preemptado
+            exec.duracao = 0;
         }
     }
 

@@ -3,6 +3,7 @@
     "string.h": "c",
     "stdio.h": "c",
     "processo.h": "c",
-    "exporta_json.h": "c"
+    "exporta_json.h": "c",
+    "stdlib.h": "c"
   }
 }

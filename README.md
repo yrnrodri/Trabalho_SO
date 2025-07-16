@@ -106,6 +106,6 @@ pip install streamlit pandas plotly
 
 ---
 
-<!-- (Autores serão inseridos em breve) -->
+## **Autores**
 
-```
+---
