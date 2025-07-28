@@ -107,8 +107,8 @@ pip install streamlit pandas plotly
 ---
 
 ## **Autores**
-* Anderson Moura Costa do Nascimento
-* João Rodrigo Ferreira do Nascimento
-* Lucas de Oliveira Sobral
-* Osvaldo Medeiros Cavalcante Neto
+* Anderson Moura Costa do Nascimento (555856)
+* João Rodrigo Ferreira do Nascimento (553663)
+* Lucas de Oliveira Sobral (556944)
+* Osvaldo Medeiros Cavalcante Neto (554693)
 ---
